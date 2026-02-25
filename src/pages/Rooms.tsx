@@ -5,13 +5,17 @@ import { useNavigate } from 'react-router-dom';
 
 const Rooms: React.FC = () => {
   const [roomId, setRoomId] = useState<string | null>(null);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  if (!user) {
-    navigate('/login');
-    return null;
-  }
+  React.useEffect(() => {
+    if (!loading && !user) {
+      navigate('/login');
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) return <div className="min-h-screen bg-black text-white flex items-center justify-center">Loading...</div>;
+  if (!user) return null;
 
   const handleJoin = (id: string) => {
     setRoomId(id);
